@@ -1,0 +1,7 @@
+{
+  "snippetTodoDescription": "Emmet Snippet for TODO",
+  "snippetFixmeDescription": "Emmet Snippet for FIXME",
+  "snippetScopeDescription": "Emmet Snippet for DUKE NUKEM TODO Convention: Scoping",
+  "snippetTbdDescription": "This block is used when a task needs further discussion. It is represented by the 💬 emoji.",
+  "snippetMhdDescription": "This block is used to specify a deadline for a task. It is represented by the 📅 emoji."
+}

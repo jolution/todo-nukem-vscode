@@ -2,26 +2,26 @@
     "TODO NUKEM Emmet Snippets": {
         "prefix": ["todo"],
         "body": "$BLOCK_COMMENT_START TODO: ${1|🟩,🔶,🔴|} ${2|✨,🐛|} ${3|🎨,📝,🧪,🚀,🌐,🛡️,🔄,🛠,👀|} ${0} $BLOCK_COMMENT_END",
-        "description": "Emmet Snippet for TODO"
+        "description": "%snippetTodoDescription%"
     },
     "TODO NUKEM Fixme": {
         "prefix": ["fixme"],
         "body": "$BLOCK_COMMENT_START FIXME: ${1|🟩,🔶,🔴|} 🐛 ${3|🎨,📝,🧪,🚀,🌐,🛡️,🔄,🛠,👀|} $4 ${5|🎨,📝,🧪,🚀,🌐,🛡,🔄,🛠,👀|} ${0} $BLOCK_COMMENT_END",
-        "description": "Emmet Snippet for FIXME"
+        "description": "%snippetFixmeDescription%"
     },
 	"TODO NUKEM Scope": {
         "prefix": ["todo-scope"],
         "body": "[🎯 ${TM_FILENAME_BASE/(^|-)([a-z])/${2:/capitalize}/g}]",
-        "description": "Emmet Snippet for DUKE NUKEM TODO Convention: Scoping"
+        "description": "%snippetScopeDescription%"
     },
 	"TODO NUKEM TBD": {
         "prefix": ["todo-tbd"],
         "body": "[💬 TBD]",
-        "description": "This block is used when a task needs further discussion. It is represented by the 💬 emoji."
+        "description": "%snippetTbdDescription%"
     },
     "TODO NUKEM MHD": {
         "prefix": ["todo-mhd"],
         "body": "[💬 ${1:${CURRENT_YEAR}-${CURRENT_MONTH}-${CURRENT_DATE}}${0}]",
-        "description": "This block is used when a task needs further discussion. It is represented by the 💬 emoji."
+        "description": "%snippetMhdDescription%"
     }
  }

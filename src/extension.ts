@@ -1,5 +1,24 @@
 import * as vscode from 'vscode';
 
+enum MetaBlockKey {
+    TBD = 'TBD',
+    Scope = 'Scope',
+    Ticket = 'Ticket',
+    Until = 'Until',
+    Assignee = 'Assignee',
+    SelfAssignee = 'SelfAssignee',
+    Author = 'Author',
+    SelfAuthor = 'SelfAuthor',
+    Version = 'Version',
+    Docs = 'Docs',
+    BlockCommit = 'Block-Commit'
+}
+
+interface MetaBlock extends vscode.QuickPickItem {
+    symbol: string;
+    key: MetaBlockKey;
+}
+
 function getCommentPrefix(languageId: string): string {
     const commentMap: { [key: string]: string } = {
         'javascript': '//',
@@ -34,6 +53,18 @@ function getCommentPrefix(languageId: string): string {
     return commentMap[languageId] || '//';
 }
 
+function getGitUserName(): string {
+    try {
+        const { execSync } = require('child_process');
+        return execSync('git config user.name', { 
+            cwd: vscode.workspace.workspaceFolders?.[0]?.uri.fsPath,
+            encoding: 'utf8'
+        }).trim();
+    } catch {
+        return '';
+    }
+}
+
 export function activate(context: vscode.ExtensionContext) {
     const disposable = vscode.commands.registerCommand('todo-nukem-inserter.insertTodo', async () => {
         const editor = vscode.window.activeTextEditor;
@@ -44,78 +75,92 @@ export function activate(context: vscode.ExtensionContext) {
         // Prio
         const prio = await vscode.window.showQuickPick(
             [
-                { label: '🟩 Low Prio', symbol: '🟩' },
-                { label: '🔶 Medium Prio', symbol: '🔶' },
-                { label: '🔴 High Prio', symbol: '🔴' }
+                { label: `🟩 ${vscode.l10n.t('lowPrio')}`, symbol: '🟩' },
+                { label: `🔶 ${vscode.l10n.t('mediumPrio')}`, symbol: '🔶' },
+                { label: `🔴 ${vscode.l10n.t('highPrio')}`, symbol: '🔴' }
             ],
-            { placeHolder: 'Select priority' }
+            { placeHolder: vscode.l10n.t('selectPriority') }
         );
         if (!prio) return;
 
         // Typ
         const type = await vscode.window.showQuickPick(
             [
-                { label: '✨ Feature', symbol: '✨' },
-                { label: '🐛 Fix', symbol: '🐛' }
+                { label: `✨ ${vscode.l10n.t('feature')}`, symbol: '✨' },
+                { label: `🐛 ${vscode.l10n.t('fix')}`, symbol: '🐛' }
             ],
-            { placeHolder: 'Select type' }
+            { placeHolder: vscode.l10n.t('selectType') }
         );
         if (!type) return;
 
         // Context
         const contextPick = await vscode.window.showQuickPick(
             [
-                { label: '🎨 Design', symbol: '🎨' },
-                { label: '📚 Doc', symbol: '📚' },
-                { label: '🧪 Test', symbol: '🧪' },
-                { label: '⚡ Perf', symbol: '⚡' },
-                { label: '🈷️ Lang', symbol: '🈷️' },
-                { label: '🔒 Sec', symbol: '🔒' },
-                { label: '🔄 Update', symbol: '🔄' },
-                { label: '🛠️ Optimize', symbol: '🛠️' },
-                { label: '👀 Review', symbol: '👀' }
+                { label: `🎨 ${vscode.l10n.t('design')}`, symbol: '🎨' },
+                { label: `📚 ${vscode.l10n.t('doc')}`, symbol: '📚' },
+                { label: `🧪 ${vscode.l10n.t('test')}`, symbol: '🧪' },
+                { label: `⚡ ${vscode.l10n.t('perf')}`, symbol: '⚡' },
+                { label: `🈷️ ${vscode.l10n.t('lang')}`, symbol: '🈷️' },
+                { label: `🔒 ${vscode.l10n.t('sec')}`, symbol: '🔒' },
+                { label: `🔄 ${vscode.l10n.t('update')}`, symbol: '🔄' },
+                { label: `🛠️ ${vscode.l10n.t('optimize')}`, symbol: '🛠️' },
+                { label: `👀 ${vscode.l10n.t('review')}`, symbol: '👀' }
             ],
-            { placeHolder: 'Select context' }
+            { placeHolder: vscode.l10n.t('selectContext') }
         );
         if (!contextPick) return;
 
         // Nachricht eingeben
         const message = await vscode.window.showInputBox({
-            placeHolder: 'Enter your TODO message',
-            prompt: 'What needs to be done?'
+            placeHolder: vscode.l10n.t('enterTodoMessage'),
+            prompt: vscode.l10n.t('whatNeedsToBeDone')
         });
-        if (!message) return;
+        if (message === undefined) return;
 
         // Optional Meta Blocks (mehrfach wählbar)
-        const metaBlocks = await vscode.window.showQuickPick(
+        const metaBlocks = await vscode.window.showQuickPick<MetaBlock>(
             [
-                { label: '💬 TBD', symbol: '💬', key: 'TBD' },
-                { label: '🎯 Scope', symbol: '🎯', key: 'Scope' },
-                { label: '🎫 Ticket', symbol: '🎫', key: 'Ticket' },
-                { label: '📅 Until', symbol: '📅', key: 'Until' },
-                { label: '👤 Assignee', symbol: '👤', key: 'Assignee' },
-                { label: '✍️ Author', symbol: '✍️', key: 'Author' },
-                { label: '🔖 Version', symbol: '🔖', key: 'Version' },
-                { label: '📚 Docs', symbol: '📚', key: 'Docs' },
-                { label: '🛑 Block-Commit', symbol: '🛑', key: 'Block-Commit' }
+                { label: `💬 ${vscode.l10n.t('tbd')}`, symbol: '💬', key: MetaBlockKey.TBD },
+                { label: `🎯 ${vscode.l10n.t('scope')}`, symbol: '🎯', key: MetaBlockKey.Scope },
+                { label: `🎫 ${vscode.l10n.t('ticket')}`, symbol: '🎫', key: MetaBlockKey.Ticket },
+                { label: `📅 ${vscode.l10n.t('until')}`, symbol: '📅', key: MetaBlockKey.Until },
+                { label: `👤 ${vscode.l10n.t('assignee')}`, symbol: '👤', key: MetaBlockKey.Assignee },
+                { label: `👤 ${vscode.l10n.t('selfAssignee')}`, symbol: '👤', key: MetaBlockKey.SelfAssignee },
+                { label: `✍️ ${vscode.l10n.t('author')}`, symbol: '✍️', key: MetaBlockKey.Author },
+                { label: `✍️ ${vscode.l10n.t('selfAuthor')}`, symbol: '✍️', key: MetaBlockKey.SelfAuthor },
+                { label: `🔖 ${vscode.l10n.t('version')}`, symbol: '🔖', key: MetaBlockKey.Version },
+                { label: `📚 ${vscode.l10n.t('docs')}`, symbol: '📚', key: MetaBlockKey.Docs },
+                { label: `🛑 ${vscode.l10n.t('blockCommit')}`, symbol: '🛑', key: MetaBlockKey.BlockCommit }
             ],
-            { placeHolder: 'Optional meta blocks', canPickMany: true }
+            { placeHolder: vscode.l10n.t('optionalMetaBlocks'), canPickMany: true }
         );
 
         let metaLines = '';
+        
         if (metaBlocks && metaBlocks.length > 0) {
             const metaValues: string[] = [];
+            
             for (const block of metaBlocks) {
-                const value = await vscode.window.showInputBox({
-                    placeHolder: `Enter value for ${block.label}`,
-                    prompt: `${block.key} value`
-                });
-                if (value) {
-                    metaValues.push(`[${block.symbol} ${value}]`);
-                } else {
+                
+                if (block.key === MetaBlockKey.TBD || block.key === MetaBlockKey.BlockCommit) {
                     metaValues.push(`[${block.symbol} ${block.key}]`);
+                    continue;
                 }
+
+                if (block.key === MetaBlockKey.SelfAssignee || block.key === MetaBlockKey.SelfAuthor) {
+                    const gitUser = getGitUserName();
+                    metaValues.push(`[${block.symbol} ${gitUser || vscode.l10n.t('unknown')}]`);
+                    continue;
+                }
+
+                const value = await vscode.window.showInputBox({
+                    placeHolder: vscode.l10n.t('enterValueFor', block.label),
+                    prompt: vscode.l10n.t('valueLabel', block.key)
+                });
+                
+                metaValues.push(`[${block.symbol} ${value || block.key}]`);
             }
+            
             if (metaValues.length > 0) {
                 metaLines = ' ' + metaValues.join(' ');
             }

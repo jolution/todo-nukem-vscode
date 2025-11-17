@@ -11,10 +11,11 @@
     "theme": "dark"
   },
   "description": "Generator for TODO NUKEM Convention",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "engines": {
     "vscode": "^1.88.0"
   },
+  "l10n": "./l10n",
   "license": "SEE LICENSE IN LICENSE.md",
   "categories": [
     "Snippets",
@@ -34,7 +35,8 @@
     "publish": "npx vsce publish",
     "open-in-browser": "vscode-test-web --extensionDevelopmentPath=. .",
     "compile": "tsc -p ./",
-    "watch": "tsc -watch -p ./"
+    "watch": "tsc -watch -p ./",
+    "export-l10n": "npx @vscode/l10n-dev export -o ./l10n ./src"
   },
   "contributes": {
     "commands": [
@@ -132,6 +134,7 @@
   "devDependencies": {
     "@types/node": "^24.10.1",
     "@types/vscode": "^1.88.0",
+    "@vscode/l10n-dev": "^0.0.35",
     "@vscode/test-web": "^0.0.75",
     "typescript": "^5.9.3"
   }
