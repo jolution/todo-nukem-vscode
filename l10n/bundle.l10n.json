@@ -32,5 +32,12 @@
   "unknown": "Unknown",
   "optionalMetaBlocks": "Optional meta blocks",
   "enterValueFor": "Enter value for {0}",
-  "valueLabel": "{0} value"
+  "valueLabel": "{0} value",
+  "selectPriorityFilter": "Select priority to filter",
+  "selectTypeFilter": "Select type to filter",
+  "selectContextFilter": "Select context to filter",
+  "enterAssigneeName": "Enter assignee name (or leave empty for all)",
+  "enterAuthorName": "Enter author name (or leave empty for all)",
+  "all": "All",
+  "exampleName": "e.g. Duke Nukem"
 }

@@ -1,17 +1,17 @@
 {
-  "name": "todo-nukem-generator-vscode",
-  "displayName": "TODO NUKEM Generator",
+  "name": "todo-nukem-vscode",
+  "displayName": "TODO NUKEM",
   "author": "jolution",
   "publisher": "jolution",
-  "repository": "https://github.com/jolution/todo-nukem-generator-vscode",
+  "repository": "https://github.com/jolution/todo-nukem-vscode",
   "bugs": "https://github.com/jolution/todo-nukem/issues",
   "icon": "images/icon.png",
   "galleryBanner": {
     "color": "#e8bf28",
     "theme": "dark"
   },
-  "description": "Generator for TODO NUKEM Convention",
-  "version": "0.2.0",
+  "description": "TODO NUKEM - A VSCode extension for creating and managing TODO NUKEM comments with filters and snippets",
+  "version": "0.3.0",
   "engines": {
     "vscode": "^1.88.0"
   },
@@ -21,7 +21,11 @@
     "Snippets",
     "Other"
   ],
-  "activationEvents": [],
+  "activationEvents": [
+    "onCommand:todoNukem.insertTodo",
+    "onCommand:todoNukem.showTodos",
+    "onView:todoNukemView"
+  ],
   "main": "./out/extension.js",
   "tags": [
     "typescript",
@@ -39,10 +43,95 @@
     "export-l10n": "npx @vscode/l10n-dev export -o ./l10n ./src"
   },
   "contributes": {
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "todoNukem",
+          "title": "TODO NUKEM",
+          "icon": "images/todonukem-mono.svg"
+        }
+      ]
+    },
+    "views": {
+      "todoNukem": [
+        {
+          "id": "todoNukemView",
+          "name": "TODOs"
+        }
+      ]
+    },
+    "menus": {
+      "view/title": [
+        {
+          "command": "todoNukem.refresh",
+          "when": "view == todoNukemView",
+          "group": "navigation"
+        },
+        {
+          "command": "todoNukem.filterByPriority",
+          "when": "view == todoNukemView",
+          "group": "navigation"
+        },
+        {
+          "command": "todoNukem.filterByType",
+          "when": "view == todoNukemView",
+          "group": "navigation"
+        },
+        {
+          "command": "todoNukem.filterByContext",
+          "when": "view == todoNukemView",
+          "group": "navigation"
+        },
+        {
+          "command": "todoNukem.filterByAssignee",
+          "when": "view == todoNukemView",
+          "group": "navigation"
+        },
+        {
+          "command": "todoNukem.filterByAuthor",
+          "when": "view == todoNukemView",
+          "group": "navigation"
+        }
+      ]
+    },
     "commands": [
       {
-        "command": "todo-nukem-inserter.insertTodo",
-        "title": "TODO NUKEM Comment"
+        "command": "todoNukem.insertTodo",
+        "title": "TODO NUKEM - Comment"
+      },
+      {
+        "command": "todoNukem.showTodos",
+        "title": "TODO NUKEM - Show TODOs"
+      },
+      {
+        "command": "todoNukem.refresh",
+        "title": "Refresh TODOs",
+        "icon": "$(refresh)"
+      },
+      {
+        "command": "todoNukem.filterByPriority",
+        "title": "Filter by Priority",
+        "icon": "$(list-ordered)"
+      },
+      {
+        "command": "todoNukem.filterByType",
+        "title": "Filter by Type",
+        "icon": "$(symbol-class)"
+      },
+      {
+        "command": "todoNukem.filterByContext",
+        "title": "Filter by Context",
+        "icon": "$(tag)"
+      },
+      {
+        "command": "todoNukem.filterByAssignee",
+        "title": "Filter by Assignee",
+        "icon": "$(person)"
+      },
+      {
+        "command": "todoNukem.filterByAuthor",
+        "title": "Filter by Author",
+        "icon": "$(edit)"
       }
     ],
     "snippets": [
