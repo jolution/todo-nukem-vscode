@@ -1,13 +1,18 @@
 import * as vscode from 'vscode';
 import * as path from 'path';
 import * as fs from 'fs';
-import { PriorityEmoji, TypeEmoji, ContextEmoji, MetaEmoji, EmojiUtils } from './shared/emoji';
+import { Priority, Type, Context } from './shared/constants';
+
+const packageJson = require('../package.json');
 
 export function activate(context: vscode.ExtensionContext) {
     const todoProvider = new TodoTreeDataProvider();
     const treeView = vscode.window.createTreeView('todoNukemView', {
         treeDataProvider: todoProvider
     });
+
+    // Set title with version (TODO NUKEM before already)
+    treeView.title = `TODOs v${packageJson.version}`;
 
     // Command: Show TODOs (focuses TreeView and loads TODOs)
     let showTodosCommand = vscode.commands.registerCommand('todoNukem.showTodos', () => {
@@ -23,22 +28,31 @@ export function activate(context: vscode.ExtensionContext) {
     // Command: Filter by Priority
     let filterPriorityCommand = vscode.commands.registerCommand('todoNukem.filterByPriority', async () => {
         const priority = await vscode.window.showQuickPick(
-            [FILTER_ALL, `${PriorityEmoji.High} ${vscode.l10n.t('highPrio')}`, `${PriorityEmoji.Medium} ${vscode.l10n.t('mediumPrio')}`, `${PriorityEmoji.Low} ${vscode.l10n.t('lowPrio')}`],
+            [
+                { label: FILTER_ALL, key: FILTER_ALL },
+                { label: `${Priority.High.emoji} ${vscode.l10n.t('highPrio')}`, key: Priority.High.key },
+                { label: `${Priority.Medium.emoji} ${vscode.l10n.t('mediumPrio')}`, key: Priority.Medium.key },
+                { label: `${Priority.Low.emoji} ${vscode.l10n.t('lowPrio')}`, key: Priority.Low.key }
+            ],
             { placeHolder: vscode.l10n.t('selectPriorityFilter') }
         );
         if (priority) {
-            todoProvider.setFilterPriority(priority);
+            todoProvider.setFilterPriority(priority.key);
         }
     });
 
     // Command: Filter by Type
     let filterTypeCommand = vscode.commands.registerCommand('todoNukem.filterByType', async () => {
         const type = await vscode.window.showQuickPick(
-            [FILTER_ALL, `${TypeEmoji.Feature} ${vscode.l10n.t('feature')}`, `${TypeEmoji.Fix} ${vscode.l10n.t('fix')}`],
+            [
+                { label: FILTER_ALL, key: FILTER_ALL },
+                { label: `${Type.Feature.emoji} ${vscode.l10n.t('feature')}`, key: Type.Feature.key },
+                { label: `${Type.Fix.emoji} ${vscode.l10n.t('fix')}`, key: Type.Fix.key }
+            ],
             { placeHolder: vscode.l10n.t('selectTypeFilter') }
         );
         if (type) {
-            todoProvider.setFilterType(type);
+            todoProvider.setFilterType(type.key);
         }
     });
 
@@ -46,21 +60,21 @@ export function activate(context: vscode.ExtensionContext) {
     let filterContextCommand = vscode.commands.registerCommand('todoNukem.filterByContext', async () => {
         const context = await vscode.window.showQuickPick(
             [
-                FILTER_ALL, 
-                `${ContextEmoji.Design} ${vscode.l10n.t('design')}`, 
-                `${ContextEmoji.Doc} ${vscode.l10n.t('doc')}`, 
-                `${ContextEmoji.Test} ${vscode.l10n.t('test')}`, 
-                `${ContextEmoji.Perf} ${vscode.l10n.t('perf')}`, 
-                `${ContextEmoji.Lang} ${vscode.l10n.t('lang')}`, 
-                `${ContextEmoji.Sec} ${vscode.l10n.t('sec')}`, 
-                `${ContextEmoji.Update} ${vscode.l10n.t('update')}`, 
-                `${ContextEmoji.Optimize} ${vscode.l10n.t('optimize')}`, 
-                `${ContextEmoji.Review} ${vscode.l10n.t('review')}`
+                { label: FILTER_ALL, key: FILTER_ALL },
+                { label: `${Context.Design.emoji} ${vscode.l10n.t('design')}`, key: Context.Design.key },
+                { label: `${Context.Doc.emoji} ${vscode.l10n.t('doc')}`, key: Context.Doc.key },
+                { label: `${Context.Test.emoji} ${vscode.l10n.t('test')}`, key: Context.Test.key },
+                { label: `${Context.Perf.emoji} ${vscode.l10n.t('perf')}`, key: Context.Perf.key },
+                { label: `${Context.Lang.emoji} ${vscode.l10n.t('lang')}`, key: Context.Lang.key },
+                { label: `${Context.Sec.emoji} ${vscode.l10n.t('sec')}`, key: Context.Sec.key },
+                { label: `${Context.Update.emoji} ${vscode.l10n.t('update')}`, key: Context.Update.key },
+                { label: `${Context.Optimize.emoji} ${vscode.l10n.t('optimize')}`, key: Context.Optimize.key },
+                { label: `${Context.Review.emoji} ${vscode.l10n.t('review')}`, key: Context.Review.key }
             ],
             { placeHolder: vscode.l10n.t('selectContextFilter') }
         );
         if (context) {
-            todoProvider.setFilterContext(context);
+            todoProvider.setFilterContext(context.key);
         }
     });
 
@@ -183,22 +197,19 @@ class TodoTreeDataProvider implements vscode.TreeDataProvider<TodoTreeItem> {
     private getFilteredTodos(): TodoTreeItem[] {
         let filtered = this.todos;
 
-        // Filter by Priority
+        // Filter by Priority (compare keys directly)
         if (this.filterPriority !== FILTER_ALL) {
-            const priorityEmoji = this.filterPriority.split(' ')[0];
-            filtered = filtered.filter(todo => todo.priority === priorityEmoji);
+            filtered = filtered.filter(todo => todo.priority === this.filterPriority);
         }
 
-        // Filter by Type
+        // Filter by Type (compare keys directly)
         if (this.filterType !== FILTER_ALL) {
-            const typeEmoji = this.filterType.split(' ')[0];
-            filtered = filtered.filter(todo => todo.type === typeEmoji);
+            filtered = filtered.filter(todo => todo.type === this.filterType);
         }
 
-        // Filter by Context
+        // Filter by Context (compare keys directly)
         if (this.filterContext !== FILTER_ALL) {
-            const contextEmoji = this.filterContext.split(' ')[0];
-            filtered = filtered.filter(todo => todo.context === contextEmoji);
+            filtered = filtered.filter(todo => todo.context === this.filterContext);
         }
 
         // Filter by Assignee
@@ -217,9 +228,9 @@ class TodoTreeDataProvider implements vscode.TreeDataProvider<TodoTreeItem> {
 
         // Sort: High > Medium > Low > no priority
         const priorityOrder: { [key: string]: number } = {
-            '🔴': 1,
-            '🔶': 2,
-            '🟩': 3
+            '[high]': 1,
+            '[medium]': 2,
+            '[low]': 3
         };
 
         filtered.sort((a, b) => {
@@ -303,28 +314,31 @@ class TodoTreeDataProvider implements vscode.TreeDataProvider<TodoTreeItem> {
                     fullText = fullText.replace(/(\*\/|-->)\s*$/, '').trim();
                     
                     if (fullText.length > 0) {
-                        // TODO NUKEM Format: 🔴 ✨ 🎨 Message [Meta]
-                        // Extract the first 3 emojis (Priority, Type, Context)
+                        // TODO NUKEM Format: [low] [feature] [design] Message [Meta]
+                        // Extract the first 3 keys (Priority, Type, Context)
                         const parts = fullText;
                         
-                        // Priority with enum values
-                        const priorityMatch = parts.match(new RegExp(`^(${EmojiUtils.getAllPriorities().join('|')})`));
+                        // Priority keys
+                        const priorityKeys = Object.values(Priority).map(p => p.key.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'));
+                        const priorityMatch = parts.match(new RegExp(`^(${priorityKeys.join('|')})`));
                         const priority = priorityMatch ? priorityMatch[1] : null;
                         
-                        // Type with enum values
-                        const typeMatch = parts.match(new RegExp(`^(?:${EmojiUtils.getAllPriorities().join('|')})?\\s*(${EmojiUtils.getAllTypes().join('|')})`));
+                        // Type keys
+                        const typeKeys = Object.values(Type).map(t => t.key.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'));
+                        const typeMatch = parts.match(new RegExp(`^(?:${priorityKeys.join('|')})?\\s*(${typeKeys.join('|')})`));
                         const type = typeMatch ? typeMatch[1] : null;
                         
-                        // Context with enum values
-                        const contextMatch = parts.match(new RegExp(`^(?:${EmojiUtils.getAllPriorities().join('|')})?\\s*(?:${EmojiUtils.getAllTypes().join('|')})?\\s*(${EmojiUtils.getAllContexts().join('|')})`));
+                        // Context keys
+                        const contextKeys = Object.values(Context).map(c => c.key.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'));
+                        const contextMatch = parts.match(new RegExp(`^(?:${priorityKeys.join('|')})?\\s*(?:${typeKeys.join('|')})?\\s*(${contextKeys.join('|')})`));
                         const context = contextMatch ? contextMatch[1] : null;
                         
-                        // Extract Assignee from [👤 Name]
-                        const assigneeMatch = parts.match(new RegExp(`\\[${MetaEmoji.Assignee}\\s+([^\\]]+)\\]`));
+                        // Extract Assignee from [assignee: value] (colon followed by exactly one space)
+                        const assigneeMatch = parts.match(/\[(?:assignee|👤):\s([^\]]+)\]/);
                         const assignee = assigneeMatch ? assigneeMatch[1].trim() : null;
                         
-                        // Extract Author from [✍️ Name]
-                        const authorMatch = parts.match(new RegExp(`\\[${MetaEmoji.Author}\\s+([^\\]]+)\\]`));
+                        // Extract Author from [author: value] (colon followed by exactly one space)
+                        const authorMatch = parts.match(/\[(?:author|✍️):\s([^\]]+)\]/);
                         const author = authorMatch ? authorMatch[1].trim() : null;
                         
                         this.todos.push({
@@ -362,11 +376,11 @@ class TodoTreeItem extends vscode.TreeItem {
         };
 
         // Icon based on priority
-        if (todo.priority === PriorityEmoji.High) {
+        if (todo.priority === Priority.High.key) {
             this.iconPath = new vscode.ThemeIcon('error', new vscode.ThemeColor('errorForeground'));
-        } else if (todo.priority === PriorityEmoji.Medium) {
+        } else if (todo.priority === Priority.Medium.key) {
             this.iconPath = new vscode.ThemeIcon('warning', new vscode.ThemeColor('editorWarning.foreground'));
-        } else if (todo.priority === PriorityEmoji.Low) {
+        } else if (todo.priority === Priority.Low.key) {
             this.iconPath = new vscode.ThemeIcon('pass', new vscode.ThemeColor('testing.iconPassed'));
         } else {
             this.iconPath = new vscode.ThemeIcon('comment');

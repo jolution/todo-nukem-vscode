@@ -11,20 +11,24 @@
     "theme": "dark"
   },
   "description": "TODO NUKEM - A VSCode extension for creating and managing TODO NUKEM comments with filters and snippets",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "engines": {
     "vscode": "^1.88.0"
+  },
+  "scripts": {
+    "prepublish": "npm version patch --no-git-tag-version && npm run package",
+    "package": "npx vsce package",
+    "publish": "npx vsce publish",
+    "open-in-browser": "vscode-test-web --extensionDevelopmentPath=. .",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "export-l10n": "npx @vscode/l10n-dev export -o ./l10n ./src"
   },
   "l10n": "./l10n",
   "license": "SEE LICENSE IN LICENSE.md",
   "categories": [
     "Snippets",
     "Other"
-  ],
-  "activationEvents": [
-    "onCommand:todoNukem.insertTodo",
-    "onCommand:todoNukem.showTodos",
-    "onView:todoNukemView"
   ],
   "main": "./out/extension.js",
   "tags": [
@@ -33,15 +37,6 @@
     "snippet",
     "documentation"
   ],
-  "scripts": {
-    "prepublish": "npm run compile",
-    "package": "npx vsce package",
-    "publish": "npx vsce publish",
-    "open-in-browser": "vscode-test-web --extensionDevelopmentPath=. .",
-    "compile": "tsc -p ./",
-    "watch": "tsc -watch -p ./",
-    "export-l10n": "npx @vscode/l10n-dev export -o ./l10n ./src"
-  },
   "contributes": {
     "viewsContainers": {
       "activitybar": [
@@ -91,6 +86,11 @@
           "command": "todoNukem.filterByAuthor",
           "when": "view == todoNukemView",
           "group": "navigation"
+        },
+        {
+          "command": "todoNukem.toggleDecorations",
+          "when": "view == todoNukemView",
+          "group": "navigation"
         }
       ]
     },
@@ -132,6 +132,16 @@
         "command": "todoNukem.filterByAuthor",
         "title": "Filter by Author",
         "icon": "$(edit)"
+      },
+      {
+        "command": "todoNukem.toggleDecorations",
+        "title": "Toggle Emoji Decorations",
+        "icon": "$(eye)"
+      },
+      {
+        "command": "todoNukem.refreshConfig",
+        "title": "TODO NUKEM - Reload Config",
+        "icon": "$(refresh)"
       }
     ],
     "snippets": [
@@ -218,13 +228,13 @@
     ]
   },
   "dependencies": {
-    "@vscode/vsce": "^3.7.0"
+    "@vscode/vsce": "^3.7.1"
   },
   "devDependencies": {
     "@types/node": "^24.10.1",
     "@types/vscode": "^1.88.0",
     "@vscode/l10n-dev": "^0.0.35",
-    "@vscode/test-web": "^0.0.75",
+    "@vscode/test-web": "^0.0.76",
     "typescript": "^5.9.3"
   }
 }

@@ -1,27 +1,27 @@
 {
     "TODO NUKEM Emmet Snippets": {
         "prefix": ["todo"],
-        "body": "$LINE_COMMENT TODO: ${1|🟩,🔶,🔴|} ${2|✨,🐛|} ${3|🎨,📝,🧪,🚀,🌐,🛡️,🔄,🛠,👀|} ${0}",
+        "body": "$LINE_COMMENT TODO: ${1|[low],[medium],[high]|} ${2|[feature],[fix]|} ${3|[design],[doc],[test],[perf],[lang],[sec],[update],[optimize],[review]|} ${0}",
         "description": "%snippetTodoDescription%"
     },
     "TODO NUKEM Fixme": {
         "prefix": ["fixme"],
-        "body": "$LINE_COMMENT FIXME: ${1|🟩,🔶,🔴|} 🐛 ${3|🎨,📝,🧪,🚀,🌐,🛡️,🔄,🛠,👀|} $4 ${5|🎨,📝,🧪,🚀,🌐,🛡,🔄,🛠,👀|} ${0}",
+        "body": "$LINE_COMMENT FIXME: ${1|[low],[medium],[high]|} [fix] ${3|[design],[doc],[test],[perf],[lang],[sec],[update],[optimize],[review]|} ${0}",
         "description": "%snippetFixmeDescription%"
     },
 	"TODO NUKEM Scope": {
         "prefix": ["todo-scope"],
-        "body": "[🎯 ${TM_FILENAME_BASE/(^|-)([a-z])/${2:/capitalize}/g}]",
+        "body": "[scope: ${TM_FILENAME_BASE/(^|-)([a-z])/${2:/capitalize}/g}]",
         "description": "%snippetScopeDescription%"
     },
 	"TODO NUKEM TBD": {
         "prefix": ["todo-tbd"],
-        "body": "[💬 TBD]",
+        "body": "[tbd]",
         "description": "%snippetTbdDescription%"
     },
     "TODO NUKEM MHD": {
         "prefix": ["todo-mhd"],
-        "body": "[💬 ${1:${CURRENT_YEAR}-${CURRENT_MONTH}-${CURRENT_DATE}}${0}]",
+        "body": "[until: ${1:${CURRENT_YEAR}-${CURRENT_MONTH}-${CURRENT_DATE}}${0}]",
         "description": "%snippetMhdDescription%"
     }
  }

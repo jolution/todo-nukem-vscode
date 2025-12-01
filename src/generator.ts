@@ -1,76 +1,6 @@
 import * as vscode from 'vscode';
-import { PriorityEmoji, TypeEmoji, ContextEmoji, MetaEmoji } from './shared/emoji';
-
-enum MetaBlockKey {
-    TBD = 'TBD',
-    Scope = 'Scope',
-    Ticket = 'Ticket',
-    Until = 'Until',
-    Assignee = 'Assignee',
-    SelfAssignee = 'SelfAssignee',
-    Author = 'Author',
-    SelfAuthor = 'SelfAuthor',
-    Version = 'Version',
-    Docs = 'Docs',
-    BlockCommit = 'Block-Commit'
-}
-
-interface MetaBlock extends vscode.QuickPickItem {
-    symbol: string;
-    key: MetaBlockKey;
-}
-
-/**
- * Returns the appropriate comment prefix for the given language
- */
-function getCommentPrefix(languageId: string): string {
-    const commentMap: { [key: string]: string } = {
-        'javascript': '//',
-        'typescript': '//',
-        'java': '//',
-        'c': '//',
-        'cpp': '//',
-        'csharp': '//',
-        'go': '//',
-        'rust': '//',
-        'php': '//',
-        'swift': '//',
-        'kotlin': '//',
-        'dart': '//',
-        'python': '#',
-        'ruby': '#',
-        'shell': '#',
-        'bash': '#',
-        'powershell': '#',
-        'yaml': '#',
-        'perl': '#',
-        'r': '#',
-        'html': '<!--',
-        'xml': '<!--',
-        'css': '/*',
-        'scss': '//',
-        'less': '//',
-        'sql': '--',
-        'lua': '--',
-        'haskell': '--',
-    };
-    return commentMap[languageId] || '//';
-}
-
-/**
- * Retrieves the Git username from the current workspace
- */
-function getGitUserName(): string {
-    try {
-        const { execSync } = require('child_process');
-        return execSync('git config user.name', { 
-            cwd: vscode.workspace.workspaceFolders?.[0]?.uri.fsPath,
-            encoding: 'utf8'
-        }).trim();
-    } catch {
-        return '';
-    }
-}
+import { Priority, Type, Context, Meta } from './shared/constants';
+import { getCommentPrefix, MetaBlockKey, MetaBlock, getGitUserName } from './shared/utils';
 
 export function activate(context: vscode.ExtensionContext) {
     // IMPORTANT: Command name must match package.json!
@@ -83,9 +13,9 @@ export function activate(context: vscode.ExtensionContext) {
         // Priority selection
         const prio = await vscode.window.showQuickPick(
             [
-                { label: `${PriorityEmoji.Low} ${vscode.l10n.t('lowPrio')}`, symbol: PriorityEmoji.Low },
-                { label: `${PriorityEmoji.Medium} ${vscode.l10n.t('mediumPrio')}`, symbol: PriorityEmoji.Medium },
-                { label: `${PriorityEmoji.High} ${vscode.l10n.t('highPrio')}`, symbol: PriorityEmoji.High }
+                { label: `${Priority.Low.emoji} ${vscode.l10n.t('lowPrio')}`, key: Priority.Low.key },
+                { label: `${Priority.Medium.emoji} ${vscode.l10n.t('mediumPrio')}`, key: Priority.Medium.key },
+                { label: `${Priority.High.emoji} ${vscode.l10n.t('highPrio')}`, key: Priority.High.key }
             ],
             { placeHolder: vscode.l10n.t('selectPriority') }
         );
@@ -94,8 +24,8 @@ export function activate(context: vscode.ExtensionContext) {
         // Type selection
         const type = await vscode.window.showQuickPick(
             [
-                { label: `${TypeEmoji.Feature} ${vscode.l10n.t('feature')}`, symbol: TypeEmoji.Feature },
-                { label: `${TypeEmoji.Fix} ${vscode.l10n.t('fix')}`, symbol: TypeEmoji.Fix }
+                { label: `${Type.Feature.emoji} ${vscode.l10n.t('feature')}`, key: Type.Feature.key },
+                { label: `${Type.Fix.emoji} ${vscode.l10n.t('fix')}`, key: Type.Fix.key }
             ],
             { placeHolder: vscode.l10n.t('selectType') }
         );
@@ -104,15 +34,15 @@ export function activate(context: vscode.ExtensionContext) {
         // Context selection
         const contextPick = await vscode.window.showQuickPick(
             [
-                { label: `${ContextEmoji.Design} ${vscode.l10n.t('design')}`, symbol: ContextEmoji.Design },
-                { label: `${ContextEmoji.Doc} ${vscode.l10n.t('doc')}`, symbol: ContextEmoji.Doc },
-                { label: `${ContextEmoji.Test} ${vscode.l10n.t('test')}`, symbol: ContextEmoji.Test },
-                { label: `${ContextEmoji.Perf} ${vscode.l10n.t('perf')}`, symbol: ContextEmoji.Perf },
-                { label: `${ContextEmoji.Lang} ${vscode.l10n.t('lang')}`, symbol: ContextEmoji.Lang },
-                { label: `${ContextEmoji.Sec} ${vscode.l10n.t('sec')}`, symbol: ContextEmoji.Sec },
-                { label: `${ContextEmoji.Update} ${vscode.l10n.t('update')}`, symbol: ContextEmoji.Update },
-                { label: `${ContextEmoji.Optimize} ${vscode.l10n.t('optimize')}`, symbol: ContextEmoji.Optimize },
-                { label: `${ContextEmoji.Review} ${vscode.l10n.t('review')}`, symbol: ContextEmoji.Review }
+                { label: `${Context.Design.emoji} ${vscode.l10n.t('design')}`, key: Context.Design.key },
+                { label: `${Context.Doc.emoji} ${vscode.l10n.t('doc')}`, key: Context.Doc.key },
+                { label: `${Context.Test.emoji} ${vscode.l10n.t('test')}`, key: Context.Test.key },
+                { label: `${Context.Perf.emoji} ${vscode.l10n.t('perf')}`, key: Context.Perf.key },
+                { label: `${Context.Lang.emoji} ${vscode.l10n.t('lang')}`, key: Context.Lang.key },
+                { label: `${Context.Sec.emoji} ${vscode.l10n.t('sec')}`, key: Context.Sec.key },
+                { label: `${Context.Update.emoji} ${vscode.l10n.t('update')}`, key: Context.Update.key },
+                { label: `${Context.Optimize.emoji} ${vscode.l10n.t('optimize')}`, key: Context.Optimize.key },
+                { label: `${Context.Review.emoji} ${vscode.l10n.t('review')}`, key: Context.Review.key }
             ],
             { placeHolder: vscode.l10n.t('selectContext') }
         );
@@ -128,17 +58,17 @@ export function activate(context: vscode.ExtensionContext) {
         // Optional Meta Blocks (multi-select)
         const metaBlocks = await vscode.window.showQuickPick<MetaBlock>(
             [
-                { label: `${MetaEmoji.TBD} ${vscode.l10n.t('tbd')}`, symbol: MetaEmoji.TBD, key: MetaBlockKey.TBD },
-                { label: `${MetaEmoji.Scope} ${vscode.l10n.t('scope')}`, symbol: MetaEmoji.Scope, key: MetaBlockKey.Scope },
-                { label: `${MetaEmoji.Ticket} ${vscode.l10n.t('ticket')}`, symbol: MetaEmoji.Ticket, key: MetaBlockKey.Ticket },
-                { label: `${MetaEmoji.Until} ${vscode.l10n.t('until')}`, symbol: MetaEmoji.Until, key: MetaBlockKey.Until },
-                { label: `${MetaEmoji.Assignee} ${vscode.l10n.t('assignee')}`, symbol: MetaEmoji.Assignee, key: MetaBlockKey.Assignee },
-                { label: `${MetaEmoji.Assignee} ${vscode.l10n.t('selfAssignee')}`, symbol: MetaEmoji.Assignee, key: MetaBlockKey.SelfAssignee },
-                { label: `${MetaEmoji.Author} ${vscode.l10n.t('author')}`, symbol: MetaEmoji.Author, key: MetaBlockKey.Author },
-                { label: `${MetaEmoji.Author} ${vscode.l10n.t('selfAuthor')}`, symbol: MetaEmoji.Author, key: MetaBlockKey.SelfAuthor },
-                { label: `${MetaEmoji.Version} ${vscode.l10n.t('version')}`, symbol: MetaEmoji.Version, key: MetaBlockKey.Version },
-                { label: `${MetaEmoji.Docs} ${vscode.l10n.t('docs')}`, symbol: MetaEmoji.Docs, key: MetaBlockKey.Docs },
-                { label: `${MetaEmoji.BlockCommit} ${vscode.l10n.t('blockCommit')}`, symbol: MetaEmoji.BlockCommit, key: MetaBlockKey.BlockCommit }
+                { label: `${Meta.TBD.emoji} ${vscode.l10n.t('tbd')}`, key: Meta.TBD.key, metaType: MetaBlockKey.TBD },
+                { label: `${Meta.Scope.emoji} ${vscode.l10n.t('scope')}`, key: Meta.Scope.key, metaType: MetaBlockKey.Scope },
+                { label: `${Meta.Ticket.emoji} ${vscode.l10n.t('ticket')}`, key: Meta.Ticket.key, metaType: MetaBlockKey.Ticket },
+                { label: `${Meta.Until.emoji} ${vscode.l10n.t('until')}`, key: Meta.Until.key, metaType: MetaBlockKey.Until },
+                { label: `${Meta.Assignee.emoji} ${vscode.l10n.t('assignee')}`, key: Meta.Assignee.key, metaType: MetaBlockKey.Assignee },
+                { label: `${Meta.Assignee.emoji} ${vscode.l10n.t('selfAssignee')}`, key: Meta.Assignee.key, metaType: MetaBlockKey.SelfAssignee },
+                { label: `${Meta.Author.emoji} ${vscode.l10n.t('author')}`, key: Meta.Author.key, metaType: MetaBlockKey.Author },
+                { label: `${Meta.Author.emoji} ${vscode.l10n.t('selfAuthor')}`, key: Meta.Author.key, metaType: MetaBlockKey.SelfAuthor, picked: true },
+                { label: `${Meta.Version.emoji} ${vscode.l10n.t('version')}`, key: Meta.Version.key, metaType: MetaBlockKey.Version },
+                { label: `${Meta.Docs.emoji} ${vscode.l10n.t('docs')}`, key: Meta.Docs.key, metaType: MetaBlockKey.Docs },
+                { label: `${Meta.BlockCommit.emoji} ${vscode.l10n.t('blockCommit')}`, key: Meta.BlockCommit.key, metaType: MetaBlockKey.BlockCommit }
             ],
             { placeHolder: vscode.l10n.t('optionalMetaBlocks'), canPickMany: true }
         );
@@ -150,25 +80,26 @@ export function activate(context: vscode.ExtensionContext) {
             
             for (const block of metaBlocks) {
                 // Blocks without values
-                if (block.key === MetaBlockKey.TBD || block.key === MetaBlockKey.BlockCommit) {
-                    metaValues.push(`[${block.symbol} ${block.key}]`);
+                if (block.metaType === MetaBlockKey.TBD || block.metaType === MetaBlockKey.BlockCommit) {
+                    metaValues.push(block.key);
                     continue;
                 }
 
-                // Auto-fill with Git username
-                if (block.key === MetaBlockKey.SelfAssignee || block.key === MetaBlockKey.SelfAuthor) {
+                // Auto-fill with Git username for SelfAuthor and SelfAssignee
+                if (block.metaType === MetaBlockKey.SelfAssignee || block.metaType === MetaBlockKey.SelfAuthor) {
                     const gitUser = getGitUserName();
-                    metaValues.push(`[${block.symbol} ${gitUser || vscode.l10n.t('unknown')}]`);
+                    const metaKey = block.metaType === MetaBlockKey.SelfAssignee ? 'assignee' : 'author';
+                    metaValues.push(`[${metaKey}: ${gitUser || vscode.l10n.t('unknown')}]`);
                     continue;
                 }
 
                 // User input required
                 const value = await vscode.window.showInputBox({
                     placeHolder: vscode.l10n.t('enterValueFor', block.label),
-                    prompt: vscode.l10n.t('valueLabel', block.key)
+                    prompt: vscode.l10n.t('valueLabel', block.metaType)
                 });
                 
-                metaValues.push(`[${block.symbol} ${value || block.key}]`);
+                metaValues.push(`[${block.metaType.toLowerCase()}: ${value || ''}]`);
             }
             
             if (metaValues.length > 0) {
@@ -179,7 +110,7 @@ export function activate(context: vscode.ExtensionContext) {
         // Insert TODO comment
         editor.edit(editBuilder => {
             editor.selections.forEach(sel => {
-                editBuilder.replace(sel, `${commentPrefix} TODO: ${prio.symbol} ${type.symbol} ${contextPick.symbol} ${message}${metaLines}`);
+                editBuilder.replace(sel, `${commentPrefix} TODO: ${prio.key} ${type.key} ${contextPick.key} ${message}${metaLines}`);
             });
         });
     });

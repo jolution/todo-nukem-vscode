@@ -47,11 +47,21 @@ Follow the guided prompts:
 4. **Message**: Your TODO description
 5. **Meta Blocks** (optional): 💬 TBD / 🎯 Scope / 🎫 Ticket / 📅 Until / etc.
 
-**Example output:**
+**Example in source code:**
 
 ```typescript
-// TODO: 🔴 ✨ 🎨 Refactor button component [🎫 JIRA-123] [📅 2025-12-31]
+// TODO: [high] [feature] [design] Refactor button component [ticket: JIRA-123] [until: 2025-12-31]
 ```
+
+**Visual display (with decorations):**
+
+The extension decorates the keys with emojis in the editor:
+
+```text
+// TODO: 🔴 ✨ 🎨 Refactor button component 🎫 JIRA-123 📅 2025-12-31
+```
+
+> **Note:** You can customize the display mode in `todonukem.json` (emoji, text, or emoji-text combination). Alternatively, click the **eye icon (👁️)** in the status bar to quickly toggle between display modes.
 
 ### 2. ⚡ Quick Snippets
 
@@ -94,6 +104,89 @@ In User Settings search for `quickSuggestions` and enable the following options:
     "strings": true
 }
 ```
+
+</p>
+</details>
+
+<details>
+<summary>The green emoji (🟩) doesn't display on older Windows 10 versions</summary>
+<p>Older Windows 10 versions don't support the green square emoji (🟩). To fix this, create a <code>todonukem.json</code> file in your workspace root with the following content:
+
+```json
+{
+  "emojis": {
+    "priority": {
+      "low": "🟢"
+    }
+  }
+}
+```
+
+This replaces the green square with a green circle (🟢).
+
+After creating the file, press `Ctrl+Shift+P` (or `Cmd+Shift+P` on Mac), type `reload`, and select **"Developer: Reload Window"** to apply the changes.
+
+</p>
+</details>
+
+<details>
+<summary>How can I customize the display mode?</summary>
+<p>You can customize how TODOs are displayed by creating a <code>todonukem.json</code> file in your workspace root:
+
+**Emoji only (default):**
+
+```json
+{
+  "displayMode": "emoji"
+}
+```
+
+Displays: `🔴 ✨ 🎨`
+
+**Text only:**
+
+```json
+{
+  "displayMode": "text"
+}
+```
+
+Displays: `High Feature Design`
+
+**Emoji-text combination:**
+
+```json
+{
+  "displayMode": "emoji-text"
+}
+```
+
+Displays: `🔴-high ✨-feature 🎨-design`
+
+After creating or modifying the file, reload the window with `Ctrl+Shift+P` → `reload` → **"Developer: Reload Window"**.
+
+</p>
+</details>
+
+<details>
+<summary>How can I configure ticket links?</summary>
+<p>You can make ticket references clickable by configuring a <code>ticketBaseUrl</code> in your <code>todonukem.json</code> file:
+
+```json
+{
+  "ticketBaseUrl": "https://jira.example.com/browse"
+}
+```
+
+Now when you use `[ticket: JIRA-123]` in your TODO comments, the ticket ID becomes a clickable link that opens in your browser:
+
+```typescript
+// TODO: [high] [feature] Fix login bug [ticket: JIRA-123]
+```
+
+Clicking on `JIRA-123` will open `https://jira.example.com/browse/JIRA-123`.
+
+After creating or modifying the file, reload the window with `Ctrl+Shift+P` → `reload` → **"Developer: Reload Window"**.
 
 </p>
 </details>

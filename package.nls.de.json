@@ -1,7 +1,7 @@
 {
-  "snippetTodoDescription": "Emmet Snippet für TODO",
-  "snippetFixmeDescription": "Emmet Snippet für FIXME",
-  "snippetScopeDescription": "Emmet Snippet für DUKE NUKEM TODO Konvention: Geltungsbereich",
-  "snippetTbdDescription": "Dieser Block wird verwendet, wenn eine Aufgabe weitere Diskussion benötigt. Er wird durch das 💬 Emoji dargestellt.",
-  "snippetMhdDescription": "Dieser Block wird verwendet, um eine Frist für eine Aufgabe anzugeben. Er wird durch das 📅 Emoji dargestellt."
+  "snippetTodoDescription": "Emmet Snippet für TODO mit schlüsselbasierten Tags",
+  "snippetFixmeDescription": "Emmet Snippet für FIXME mit schlüsselbasierten Tags",
+  "snippetScopeDescription": "Emmet Snippet für TODO NUKEM Konvention: Geltungsbereich",
+  "snippetTbdDescription": "Dieser Block wird verwendet, wenn eine Aufgabe weitere Diskussion benötigt",
+  "snippetMhdDescription": "Dieser Block wird verwendet, um eine Frist für eine Aufgabe anzugeben"
 }
