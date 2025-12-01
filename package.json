@@ -16,8 +16,8 @@
     "vscode": "^1.88.0"
   },
   "scripts": {
-    "prepublish": "npm version patch --no-git-tag-version && npm run package",
-    "package": "npx vsce package",
+    "vscode:prepublish": "npm run compile",
+    "package": "npm version patch --no-git-tag-version && npm run compile && npx vsce package",
     "publish": "npx vsce publish",
     "open-in-browser": "vscode-test-web --extensionDevelopmentPath=. .",
     "compile": "tsc -p ./",
@@ -232,14 +232,12 @@
       }
     ]
   },
-  "dependencies": {
-    "@vscode/vsce": "^3.7.1"
-  },
   "devDependencies": {
     "@types/node": "^24.10.1",
     "@types/vscode": "^1.88.0",
     "@vscode/l10n-dev": "^0.0.35",
     "@vscode/test-web": "^0.0.76",
+    "@vscode/vsce": "^3.7.1",
     "typescript": "^5.9.3"
   }
 }

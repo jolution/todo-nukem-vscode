@@ -1,3 +1,6 @@
+todonukem.json
+
+# Default ignore
 node_modules
 *.vsix
 .history
