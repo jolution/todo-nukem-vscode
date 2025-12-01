@@ -11,7 +11,7 @@
     "theme": "dark"
   },
   "description": "TODO NUKEM - A VSCode extension for creating and managing TODO NUKEM comments with filters and snippets",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "engines": {
     "vscode": "^1.88.0"
   },
@@ -29,6 +29,11 @@
   "categories": [
     "Snippets",
     "Other"
+  ],
+  "activationEvents": [
+    "onCommand:todoNukem.insertTodo",
+    "onCommand:todoNukem.showTodos",
+    "onView:todoNukemView"
   ],
   "main": "./out/extension.js",
   "tags": [
