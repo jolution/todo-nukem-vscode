@@ -116,13 +116,13 @@ In User Settings search for `quickSuggestions` and enable the following options:
 {
   "emojis": {
     "priority": {
-      "low": "🟢"
+      "low": "🔵"
     }
   }
 }
 ```
 
-This replaces the green square with a green circle (🟢).
+This replaces the green square with a blue circle (🔵).
 
 After creating the file, press `Ctrl+Shift+P` (or `Cmd+Shift+P` on Mac), type `reload`, and select **"Developer: Reload Window"** to apply the changes.
 

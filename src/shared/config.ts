@@ -43,6 +43,27 @@ interface TodoNukemConfig {
     };
 }
 
+export const ignoredDirs: string[] = [
+    'node_modules',
+    '.git',
+    'dist',
+    'build',
+    'out',
+    '.vscode',
+    '.history',
+    'coverage',
+    '.angular',
+];
+
+export const todoFileExtensions: string[] = [
+    '.ts', '.tsx', '.js', '.jsx',
+    '.py', '.java', '.cs', '.cpp', '.c', '.h',
+    '.go', '.rs', '.swift', '.kt',
+    '.php', '.rb', '.vue', '.svelte',
+    '.html', '.css', '.scss', '.sass',
+    '.json', '.md', '.txt'
+];
+
 let cachedConfig: TodoNukemConfig | null = null;
 
 /**

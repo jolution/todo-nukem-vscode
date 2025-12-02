@@ -2,6 +2,7 @@ import * as vscode from 'vscode';
 import * as path from 'path';
 import * as fs from 'fs';
 import { Priority, Type, Context } from './shared/constants';
+import { ignoredDirs, todoFileExtensions } from './shared/config';
 
 const packageJson = require('../package.json');
 
@@ -252,6 +253,16 @@ class TodoTreeDataProvider implements vscode.TreeDataProvider<TodoTreeItem> {
         for (const folder of vscode.workspace.workspaceFolders) {
             await this.scanDirectory(folder.uri.fsPath);
         }
+
+        // Remove duplicates based on filePath and line number
+        const uniqueTodos = new Map<string, TodoItem>();
+        this.todos.forEach(todo => {
+            const key = `${todo.filePath}:${todo.line}`;
+            if (!uniqueTodos.has(key)) {
+                uniqueTodos.set(key, todo);
+            }
+        });
+        this.todos = Array.from(uniqueTodos.values());
     }
 
     private async scanDirectory(dirPath: string): Promise<void> {
@@ -275,29 +286,11 @@ class TodoTreeDataProvider implements vscode.TreeDataProvider<TodoTreeItem> {
     }
 
     private shouldIgnoreDirectory(name: string): boolean {
-        const ignoredDirs = [
-            'node_modules',
-            '.git',
-            'dist',
-            'build',
-            'out',
-            '.vscode',
-            '.history',
-            'coverage'
-        ];
         return ignoredDirs.includes(name);
     }
 
     private shouldScanFile(name: string): boolean {
-        const extensions = [
-            '.ts', '.tsx', '.js', '.jsx',
-            '.py', '.java', '.cs', '.cpp', '.c', '.h',
-            '.go', '.rs', '.swift', '.kt',
-            '.php', '.rb', '.vue', '.svelte',
-            '.html', '.css', '.scss', '.sass',
-            '.json', '.md', '.txt'
-        ];
-        return extensions.some(ext => name.endsWith(ext));
+        return todoFileExtensions.some(ext => name.endsWith(ext));
     }
 
     private async scanFile(filePath: string): Promise<void> {

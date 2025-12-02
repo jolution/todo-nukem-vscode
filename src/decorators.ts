@@ -24,7 +24,8 @@ class TicketLinkProvider implements vscode.DocumentLinkProvider {
 
         const links: vscode.DocumentLink[] = [];
         const text = document.getText();
-        const ticketRegex = /\[ticket:\s*([A-Z]+-\d+)\]/gi;
+        // Supports both Jira (ABC-123) and Azure DevOps (1234) ticket formats
+        const ticketRegex = /\[ticket:\s*([A-Z]+-\d+|\d+)\]/gi;
         let match;
 
         while ((match = ticketRegex.exec(text)) !== null) {
@@ -35,7 +36,7 @@ class TicketLinkProvider implements vscode.DocumentLinkProvider {
             
             const ticketUrl = vscode.Uri.parse(`${ticketBaseUrl}/${ticketId}`);
             const link = new vscode.DocumentLink(range, ticketUrl);
-            link.tooltip = `Open ${ticketId} in browser`;
+            link.tooltip = vscode.l10n.t('openTicketInBrowser', ticketId);
             links.push(link);
         }
         return links;
@@ -76,8 +77,9 @@ export function activate(context: vscode.ExtensionContext) {
         // Update context for icon change
         vscode.commands.executeCommand('setContext', 'todoNukem.decorationsEnabled', decorationsEnabled);
         
+        const status = decorationsEnabled ? vscode.l10n.t('enabled') : vscode.l10n.t('disabled');
         vscode.window.showInformationMessage(
-            `TODO NUKEM Decorations: ${decorationsEnabled ? 'Enabled' : 'Disabled'}`
+            vscode.l10n.t('decorationsStatus', status)
         );
     });
 
@@ -85,7 +87,7 @@ export function activate(context: vscode.ExtensionContext) {
     const refreshConfigCommand = vscode.commands.registerCommand('todoNukem.refreshConfig', () => {
         clearConfigCache();
         recreateDecorations(activeEditor);
-        vscode.window.showInformationMessage('TODO NUKEM: Config reloaded');
+        vscode.window.showInformationMessage(vscode.l10n.t('configReloaded'));
     });
 
     context.subscriptions.push(toggleCommand, refreshConfigCommand);

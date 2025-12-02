@@ -11,7 +11,7 @@
     "theme": "dark"
   },
   "description": "TODO NUKEM - A VSCode extension for creating and managing TODO NUKEM comments with filters and snippets",
-  "version": "0.4.1",
+  "version": "0.4.3",
   "engines": {
     "vscode": "^1.88.0"
   },

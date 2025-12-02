@@ -3,5 +3,10 @@
   "snippetFixmeDescription": "Emmet Snippet for FIXME with key-based tags",
   "snippetScopeDescription": "Emmet Snippet for TODO NUKEM Convention: Scoping",
   "snippetTbdDescription": "This block is used when a task needs further discussion",
-  "snippetMhdDescription": "This block is used to specify a deadline for a task"
+  "snippetMhdDescription": "This block is used to specify a deadline for a task",
+  "openTicketInBrowser": "Open {0} in browser",
+  "enabled": "Enabled",
+  "disabled": "Disabled",
+  "decorationsStatus": "TODO NUKEM Decorations: {0}",
+  "configReloaded": "TODO NUKEM: Config reloaded"
 }

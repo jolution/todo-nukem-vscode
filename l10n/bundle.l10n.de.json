@@ -39,5 +39,10 @@
   "enterAssigneeName": "Gib den Assignee-Namen ein (oder leer lassen für alle)",
   "enterAuthorName": "Gib den Author-Namen ein (oder leer lassen für alle)",
   "all": "Alle",
-  "exampleName": "z.B. Duke Nukem"
+  "exampleName": "z.B. Duke Nukem",
+  "openTicketInBrowser": "Öffne {0} im Browser",
+  "enabled": "Aktiviert",
+  "disabled": "Deaktiviert",
+  "decorationsStatus": "TODO NUKEM Dekorationen: {0}",
+  "configReloaded": "TODO NUKEM: Konfiguration neu geladen"
 }

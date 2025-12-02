@@ -3,5 +3,10 @@
   "snippetFixmeDescription": "Emmet Snippet für FIXME mit schlüsselbasierten Tags",
   "snippetScopeDescription": "Emmet Snippet für TODO NUKEM Konvention: Geltungsbereich",
   "snippetTbdDescription": "Dieser Block wird verwendet, wenn eine Aufgabe weitere Diskussion benötigt",
-  "snippetMhdDescription": "Dieser Block wird verwendet, um eine Frist für eine Aufgabe anzugeben"
+  "snippetMhdDescription": "Dieser Block wird verwendet, um eine Frist für eine Aufgabe anzugeben",
+  "openTicketInBrowser": "Ticket {0} im Browser öffnen",
+  "enabled": "Aktiviert",
+  "disabled": "Deaktiviert",
+  "decorationsStatus": "TODO NUKEM Dekorationen: {0}",
+  "configReloaded": "TODO NUKEM: Konfiguration neu geladen"
 }

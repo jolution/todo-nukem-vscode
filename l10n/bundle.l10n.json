@@ -39,5 +39,10 @@
   "enterAssigneeName": "Enter assignee name (or leave empty for all)",
   "enterAuthorName": "Enter author name (or leave empty for all)",
   "all": "All",
-  "exampleName": "e.g. Duke Nukem"
+  "exampleName": "e.g. Duke Nukem",
+  "openTicketInBrowser": "Open {0} in browser",
+  "enabled": "Enabled",
+  "disabled": "Disabled",
+  "decorationsStatus": "TODO NUKEM Decorations: {0}",
+  "configReloaded": "TODO NUKEM: Config reloaded"
 }

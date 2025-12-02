@@ -1,9 +1,0 @@
-{
-  "displayMode": "emoji",
-  "ticketBaseUrl": "https://your-jira-instance.atlassian.net/browse",
-  "emojis": {
-    "priority": {
-      "low": "🟢"
-    }
-  }
-}
