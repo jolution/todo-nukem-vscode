@@ -1,6 +1,5 @@
 {
-  "$schema": "https://json-schema.org/draft-07/schema#",
-  "description": "TODO NUKEM Configuration - Copy this to 'todonukem.json' in your workspace root to customize",
+  "description": "TODO NUKEM Configuration - Copy this to '.todonukem.json' (or '.todonukem-local.json' for local overrides) in your workspace root to customize",
   "displayMode": "emoji",
   "ticketBaseUrl": "https://your-jira-instance.atlassian.net/browse",
   "emojis": {

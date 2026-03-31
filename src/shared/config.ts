@@ -67,7 +67,8 @@ export const todoFileExtensions: string[] = [
 let cachedConfig: TodoNukemConfig | null = null;
 
 /**
- * Load todonukem.json from workspace root if it exists
+ * Load .todonukem-local.json or .todonukem.json from workspace root if it exists
+ * .todonukem-local.json has priority over .todonukem.json
  */
 export function loadConfig(): TodoNukemConfig {
     if (cachedConfig) {
@@ -79,26 +80,36 @@ export function loadConfig(): TodoNukemConfig {
         return {};
     }
 
-    const configPath = path.join(workspaceFolders[0].uri.fsPath, 'todonukem.json');
+    const workspaceRoot = workspaceFolders[0].uri.fsPath;
+    const localConfigPath = path.join(workspaceRoot, '.todonukem-local.json');
+    const configPath = path.join(workspaceRoot, '.todonukem.json');
     
     try {
+        // Try .todonukem-local.json first
+        if (fs.existsSync(localConfigPath)) {
+            const content = fs.readFileSync(localConfigPath, 'utf-8');
+            cachedConfig = JSON.parse(content);
+            return cachedConfig || {};
+        }
+        
+        // Fall back to .todonukem.json
         if (fs.existsSync(configPath)) {
             const content = fs.readFileSync(configPath, 'utf-8');
             cachedConfig = JSON.parse(content);
             return cachedConfig || {};
         }
     } catch (error) {
-        console.error('Failed to load todonukem.json:', error);
+        console.error('Failed to load .todonukem-local.json or .todonukem.json:', error);
     }
 
     return {};
 }
 
 /**
- * Get emoji with todonukem.json override support
+ * Get emoji with .todonukem-local.json or .todonukem.json override support
  */
 export function getEmoji(category: 'priority' | 'type' | 'context' | 'meta', key: string): string {
-    // Check for override in todonukem.json
+    // Check for override in .todonukem-local.json or .todonukem.json
     const config = loadConfig();
     let override: string | undefined;
     

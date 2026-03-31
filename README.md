@@ -61,7 +61,7 @@ The extension decorates the keys with emojis in the editor:
 // TODO: 🔴 ✨ 🎨 Refactor button component 🎫 JIRA-123 📅 2025-12-31
 ```
 
-> **Note:** You can customize the display mode in `todonukem.json` (emoji, text, or emoji-text combination). Alternatively, click the **eye icon (👁️)** in the status bar to quickly toggle between display modes.
+> **Note:** You can customize the display mode in `.todonukem.json` (emoji, text, or emoji-text combination). Alternatively, click the **eye icon (👁️)** in the status bar to quickly toggle between display modes.
 
 ### 2. ⚡ Quick Snippets
 
@@ -110,7 +110,7 @@ In User Settings search for `quickSuggestions` and enable the following options:
 
 <details>
 <summary>The green emoji (🟩) doesn't display on older Windows 10 versions</summary>
-<p>Older Windows 10 versions don't support the green square emoji (🟩). To fix this, create a <code>todonukem.json</code> file in your workspace root with the following content:
+<p>Older Windows 10 versions don't support the green square emoji (🟩). To fix this, create a <code>.todonukem.json</code> file in your workspace root with the following content:
 
 ```json
 {
@@ -131,7 +131,7 @@ After creating the file, press `Ctrl+Shift+P` (or `Cmd+Shift+P` on Mac), type `r
 
 <details>
 <summary>How can I customize the display mode?</summary>
-<p>You can customize how TODOs are displayed by creating a <code>todonukem.json</code> file in your workspace root:
+<p>You can customize how TODOs are displayed by creating a <code>.todonukem.json</code> file in your workspace root (or <code>.todonukem-local.json</code> for local overrides):
 
 **Emoji only (default):**
 
@@ -165,12 +165,14 @@ Displays: `🔴-high ✨-feature 🎨-design`
 
 After creating or modifying the file, reload the window with `Ctrl+Shift+P` → `reload` → **"Developer: Reload Window"**.
 
+> **Note:** `.todonukem-local.json` takes priority over `.todonukem.json`, making it ideal for local development settings that shouldn't be committed.
+
 </p>
 </details>
 
 <details>
 <summary>How can I configure ticket links?</summary>
-<p>You can make ticket references clickable by configuring a <code>ticketBaseUrl</code> in your <code>todonukem.json</code> file:
+<p>You can make ticket references clickable by configuring a <code>ticketBaseUrl</code> in your <code>.todonukem.json</code> file:
 
 ```json
 {
